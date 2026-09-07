@@ -1,35 +1,46 @@
 # Comparative Analysis of Extractive Text Summarization Methods on Long Documents
 
-MSc Computer Science final semester research project — a comparative evaluation of three extractive text summarization methods on long-form documents from the WikiHow dataset.
+MSc Computer Science final semester research project — a comparative analysis of extractive text summarization methods - TF-IDF, LexRank, and a cluster-based approach using Sentence-BERT (SBERT) embeddings on long WikiHow documents.
 
-This is an **evaluation study**, not a novel model proposal. It compares statistical, graph-based, and embedding-based extractive summarization approaches specifically on documents 800+ words in length — a range underrepresented in most summarization literature, which tends to focus on short news datasets like CNN/DailyMail.
+This is a **comparative evaluation study**, not a novel model or architecture proposal. It compares exisiting summarization methods - a statistical baseline, graph-based, and embedding-based extractive summarization approaches, evaluates each methods using standard ROUGE metrics, coverage and redundancy measures and analyzes the results.
 
 ## Motivation
 
-Most extractive summarization research is evaluated on short-to-medium documents. Real-world text — instructional guides, reports, structured articles — is often much longer, and the important content is distributed throughout rather than concentrated at the start (unlike news articles, which follow an "inverted pyramid" style that lets naive baselines like Lead-3 perform deceptively well).
+Most extractive summarization research is evaluated on CNN/DailyMail Datasets (which are short-to-medium length documents) and it is considered as the gold standard for extractive summarization. But CNN/DailyMail Dataset follows an 'inverted pyramid' structure and has a Lead-3 bias as news articles are written with the most important information at the top of the article. This makes the model trained on CNN/DailyMail Datasets to generate summary using the first 3 lines of the article and thus it doesn't generalize well to other documents where information is spread throughout the document.
 
-WikiHow was chosen specifically because it resists this Lead-3 bias — each article's key information (its "Steps") is spread across the entire document, making it a more rigorous test of whether a summarization method can identify globally relevant content in long text.
+WikiHow Dataset was used for its long and structured articles. It is also resistant to Lead-3 bias commonly observed in standard news-based datasets like CNN/DailyMail. In WikiHow articles key information (its "Steps") is spread across the entire document, making it a more rigorous test of whether a summarization method can identify globally relevant content in long documents.
+
+## Objective
+
+1. Compare different extractive summarization approaches spanning statistical, graph-based, and embedding-based paradigms
+2. Evaluate their performance using standard ROUGE metrics
+3. Analyze limitations such as redundancy and coverage --------
+
 
 ## Methods Compared
 
 | Method | Type | Approach |
 |---|---|---|
 | **TF-IDF** | Statistical baseline | Sentences scored by summed TF-IDF values; top 5 selected |
-| **LexRank** | Graph-based | Sentence similarity graph (cosine similarity on TF-IDF vectors), ranked via eigenvector centrality |
-| **SBERT** | Embedding-based | Sentences encoded via `all-MiniLM-L6-v2`, clustered with K-Means, one representative sentence per cluster |
+| **LexRank** | Graph-based | Builds Sentence similarity graph (cosine similarity on TF-IDF vectors), ranked via eigenvector centrality |
+| **SBERT** | Embedding-based | Sentences encoded via `all-MiniLM-L6-v2`, clustered with K-Means, selected one representative sentence per cluster |
 
 ## Dataset
 
-- **Source:** [WikiHow dataset](https://github.com/mahnazkoupaee/WikiHow-Dataset) (Koupaee & Wang, 2018) — ~215,000 articles
+- **Source:** [WikiHow dataset](https://github.com/HiDhineshRaja/WikiHow-Dataset) — ~215,000 articles
 - **Filtering:** Articles with fewer than 800 words excluded → ~30,700 long documents remain
 - **Sample:** 500 randomly sampled articles (fixed random seed for reproducibility)
 - **Reference summaries:** WikiHow's bolded step headlines, used as ground-truth summaries
 
+Note: 800+ words was considered as long document for this research.
+
 ## Evaluation Metrics
 
 - **ROUGE-1 / ROUGE-2 / ROUGE-L** (F-measure) — standard summarization overlap metrics
-- **Content Coverage** — ROUGE-1 recall, used as a proxy for how much reference content is captured
+- **Coverage** — ROUGE-1 recall, measures fraction of reference words in generated summary
 - **Redundancy** — mean pairwise cosine similarity between summary sentences (via SBERT embeddings)
+
+Note: In addition, document length analysis was done using scatter plots, regression plots, and correlation matrix.
 
 ## Results
 
@@ -41,14 +52,33 @@ Average scores across 500 sampled documents:
 | LexRank | 0.278 | **0.078** | 0.152 | 0.487 | 0.442 |
 | SBERT | **0.309** | 0.072 | **0.166** | 0.370 | **0.325** |
 
-**Key findings:**
+## Visualization  
+
+1. ROUGE Comparison (Bar Chart)
+
+![Bar Chart](./results/Plots/bar-rouge.png)
+
+2. Redundancy & Coverage Comparison (Bar Chart)
+
+![Bar Chart](./results/Plots/bar-c&r.png)
+
+3. HeatMap - Correlation Analysis (Word count vs ROUGE-1)
+
+![Heat Map](./results/Plots/corr-heatmap.png)
+
+## Key findings
 
 - **SBERT achieved the best overall ROUGE performance** and produced the least redundant summaries, but had the lowest lexical coverage — likely because ROUGE is a purely lexical metric and doesn't credit semantically-equivalent but differently-worded sentences.
-- **LexRank achieved the highest ROUGE-2**, suggesting its centrality-based sentence selection captures more exact phrase overlap with references than SBERT's semantically diverse selections.
-- **TF-IDF had the highest coverage but also higher redundancy**, consistent with its purely frequency-driven sentence selection.
-- **No evidence of performance degradation with increasing document length** within the 800+ word range studied (Pearson r ≈ 0.056–0.075 between word count and ROUGE-1 across all three methods). This finding is scoped to the long-document range only — it does not speak to the well-documented short-to-long degradation transition.
+- **LexRank achieved the highest ROUGE-2**, suggesting stronger bigram overlap than BERT. ROUGE-2 measures exact bigram overlap, which may favors extractive methods that choose sentences resembling the reference summary wording.
+- **TF-IDF had the highest coverage but also higher redundancy**, suggesting ROUGE-based coverage does not fairly represent SBERT's actual semantic coverage.
+- **LexRank had highest redundancy**. It selects central sentences that are highly connected to many other similar sentences. This results in higher redundancy.
+- **No evidence of performance degradation with increasing document length** within the 800+ word range studied.
+- Correlation Analysis revealed **Negligible relationship between document length and ROUGE scores** of summarization methods suggesting document length (exceeding 800+ words) to have negligible influence on the performance of summarization model.
 
-Full analysis, visualizations, and discussion are available in the [dissertation report](./report/dissertation.pdf).
+**Conclusion:** 
+Overall, SBERT performed best of the three methods but only had modest ROUGE score gain over LexRank suggesting that Long document summarization such as of WikiHow articles remains a challenging task. 
+
+Full analysis, visualizations, and discussion are available in the [dissertation report](./report/Research-Dissertation.pdf).
 
 ## Repository Structure
 
@@ -59,28 +89,29 @@ Full analysis, visualizations, and discussion are available in the [dissertation
 │   ├── 03_sbert.ipynb           # SBERT summarizer + coverage/redundancy
 │   └── 04_visualization.ipynb   # All charts and correlation analysis
 ├── data/
-│   └── sample.pkl               # 500-article evaluation sample (pickled)
+│   └── final_df.pkl             # 500-article evaluation sample (pickled)
 ├── results/
-│   ├── results_table.csv
-│   └── charts/                  # Saved visualization outputs
+│   ├── results_table.jpg
+│   ├── summary-comparison-table.jpg
+│   └── Plots/                  # Saved visualization outputs
 ├── report/
-│   └── dissertation.pdf
+│   └── Research-Dissertation.pdf
 ├── requirements.txt
 └── README.md
 ```
 
-> **Note:** The full WikiHow dataset (~580MB) is not included in this repository. Download `wikihowAll.csv` from the [official dataset repository](https://github.com/mahnazkoupaee/WikiHow-Dataset) and place it in `data/raw/` to reproduce results from scratch.
+> **Note:** The full WikiHow dataset (~580MB) is not included in this repository. Download `wikihowAll.csv` from the [official dataset repository](https://github.com/HiDhineshRaja/WikiHow-Dataset) and place it in `data/raw/` to reproduce results from scratch.
 
 ## Setup & Reproduction
 
 ```bash
 # Clone the repo
-git clone https://github.com/YOUR-USERNAME/extractive-summarization-wikihow.git
+git clone https://github.com/Vivek-07-dev/extractive-summarization-wikihow.git
 cd extractive-summarization-wikihow
 
 # Create virtual environment
-python -m venv venv
-venv\Scripts\activate        # Windows
+py -3.11 -m venv venv-name
+venv-name\Scripts\activate       # Windows
 # source venv/bin/activate   # macOS/Linux
 
 # Install dependencies
@@ -100,9 +131,9 @@ pip install -r requirements.txt
 
 ## Limitations & Future Work
 
-- ROUGE-based coverage is a lexical metric and may underestimate the semantic quality of embedding-based summaries — a limitation worth addressing with semantic similarity metrics in future work.
-- This study evaluates only the long-document range (800+ words); it does not test whether performance degrades in the transition from short to long documents.
-- Future work could extend evaluation to domain-specific long-document datasets (e.g., PubMed, legal documents) and additional baselines (e.g., Lead-3, TextRank).
+- **Domain-Specific Datasets:** Future studies may extend evaluation on domain-specific long-document datasets such as PubMed scientific articles or legal documents.
+- **Short & Medium Documents:** Extend the analysis to include short and medium-length documents to identify if and at what word count threshold performance degradation begins in those ranges - a trend not observable within this study's scope.
+- **Semantic Coverage Metrics:** Replace ROUGE-based coverage with semantic coverage metrics to better reflect SBERT's actual semantic quality
 
 ## Author
 
