@@ -100,7 +100,7 @@ Full analysis, visualizations, and discussion are available in the [dissertation
 └── README.md
 ```
 
-> **Note:** The full WikiHow dataset (~580MB) is not included in this repository. Download `wikihowAll.csv` from the [official dataset repository](https://github.com/HiDhineshRaja/WikiHow-Dataset) and place it in `data/raw/` to reproduce results from scratch.
+> **Note:** The full WikiHow dataset (~580MB) is not included in this repository. Download `wikihowAll.csv` from the [official dataset repository](https://github.com/HiDhineshRaja/WikiHow-Dataset) and place it in `data/` to reproduce results from scratch.
 
 ## Setup & Reproduction
 
