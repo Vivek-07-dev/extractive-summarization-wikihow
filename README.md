@@ -140,7 +140,3 @@ pip install -r requirements.txt
 Vivek Pal — MSc Computer Science, Mumbai University  
 GitHub: [Vivek-07-dev](https://github.com/Vivek-07-dev)  
 LinkedIn: [vivek-pal07](https://www.linkedin.com/in/vivek-pal07/)
-
-## License
-
-This project is for academic purposes. Please cite appropriately if referencing this work.
