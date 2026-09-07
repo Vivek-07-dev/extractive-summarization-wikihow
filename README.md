@@ -2,13 +2,13 @@
 
 MSc Computer Science final semester research project — a comparative analysis of extractive text summarization methods - TF-IDF, LexRank, and a cluster-based approach using Sentence-BERT (SBERT) embeddings on long WikiHow documents.
 
-This is a **comparative evaluation study**, not a novel model or architecture proposal. It compares exisiting summarization methods - a statistical baseline, graph-based, and embedding-based extractive summarization approaches, evaluates each methods using standard ROUGE metrics, coverage and redundancy measures and analyzes the results.
+This is a **comparative evaluation study**, not a novel model or architecture proposal. It compares exisiting summarization methods - a statistical baseline, graph-based, and embedding-based extractive summarization approaches, evaluates each of those ,methods using standard ROUGE metrics, coverage and redundancy measures and analyzes the results.
 
-## Motivation
+## Motivation / Research Gap
 
-Most extractive summarization research is evaluated on CNN/DailyMail Datasets (which are short-to-medium length documents) and it is considered as the gold standard for extractive summarization. But CNN/DailyMail Dataset follows an 'inverted pyramid' structure and has a Lead-3 bias as news articles are written with the most important information at the top of the article. This makes the model trained on CNN/DailyMail Datasets to generate summary using the first 3 lines of the article and thus it doesn't generalize well to other documents where information is spread throughout the document.
+Most extractive summarization research is evaluated on CNN/DailyMail Datasets (which are short-to-medium length documents) and is considered as the gold standard for extractive summarization. But CNN/DailyMail Dataset follows an 'inverted pyramid' structure and has a Lead-3 bias, as news articles are written with the most important information at the top of the article. This makes the model, trained on CNN/DailyMail Datasets to generate summary using the first 3 lines of the article and thus it doesn't generalize well to other documents where information is spread throughout the document.
 
-WikiHow Dataset was used for its long and structured articles. It is also resistant to Lead-3 bias commonly observed in standard news-based datasets like CNN/DailyMail. In WikiHow articles key information (its "Steps") is spread across the entire document, making it a more rigorous test of whether a summarization method can identify globally relevant content in long documents.
+WikiHow Dataset was used to address this gap. WikiHow has long and structured articles. It is also resistant to Lead-3 bias commonly observed in standard news-based datasets like CNN/DailyMail. In WikiHow articles, key information (its "Steps") is spread across the entire document, making it a more rigorous test of whether a summarization method can identify globally relevant content in long documents.
 
 ## Objective
 
