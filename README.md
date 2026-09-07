@@ -14,7 +14,7 @@ WikiHow Dataset was used to address this gap. WikiHow has long and structured ar
 
 1. Compare different extractive summarization approaches spanning statistical, graph-based, and embedding-based paradigms
 2. Evaluate their performance using standard ROUGE metrics
-3. Analyze limitations such as redundancy and coverage --------
+3. Analyze limitations such as redundancy and coverage 
 
 
 ## Methods Compared
